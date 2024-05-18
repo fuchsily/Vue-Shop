@@ -1,21 +1,21 @@
 <template>
-<div class="container">
-  <h1 class="bg-vue text-vue2">Test</h1>
-</div>
+  <HomePage></HomePage>
 </template>
 
 <script>
-
-
+import HomePage from "./pages/HomePage.vue";
 export default {
-  name: 'App',
-}
+  name: "App",
+  components: {
+    HomePage,
+  },
+};
 </script>
 
 <style>
 @import "~bootstrap/dist/css/bootstrap.min.css";
 @import "~@fortawesome/fontawesome-free/css/all.min.css";
-@import '~animate.css/animate.min.css';
+@import "~animate.css/animate.min.css";
 
 .bg-vue {
   background-color: rgb(52, 73, 94);
