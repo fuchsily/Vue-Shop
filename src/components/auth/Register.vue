@@ -36,7 +36,9 @@
             class="form-control"
             id="password"
           />
-          <small class="text" v-if="errors.password">{{ errors.password }}</small>
+          <small class="text" v-if="errors.password">{{
+            errors.password
+          }}</small>
         </div>
       </div>
       <div class="form-row">
@@ -51,7 +53,9 @@
             class="form-control"
             id="confirmPassword"
           />
-          <small class="text" v-if="errors.confirmPassword">{{ errors.confirmPassword }}</small>
+          <small class="text" v-if="errors.confirmPassword">{{
+            errors.confirmPassword
+          }}</small>
         </div>
       </div>
       <div class="form-row mt-3">
@@ -68,6 +72,7 @@
 <script>
 import { Form, Field } from "vee-validate";
 import * as yup from "yup";
+import axios from "axios";
 
 export default {
   name: "Register",
@@ -76,12 +81,12 @@ export default {
     Field,
   },
   emits: {
-    'change-components': (payload) => {
-        if (payload.componentName !== "login") {
-            return false;
-        }
-        return true;
-    }
+    "change-components": (payload) => {
+      if (payload.componentName !== "login") {
+        return false;
+      }
+      return true;
+    },
   },
   data() {
     const schema = yup.object().shape({
@@ -106,11 +111,26 @@ export default {
   },
   methods: {
     submitData(values) {
-      console.log(values);
+      // console.log(values);
+      const signupDO = {
+        email: values.email,
+        password: values.password,
+        returnSecureToken: true,
+      };
+      const apiKey = process.env.VUE_APP_API_KEY_FIREBASE;
+      console.log(apiKey);
+      axios.post(
+        `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}`,
+        signupDO
+      ).then((response) => {
+        console.log(response);
+      }).catch((error) => {
+        console.log({ error });
+      });
     },
     changeComponent(componentName) {
-        this.$emit("change-component", { componentName });
-    }
+      this.$emit("change-component", { componentName });
+    },
   },
 };
 </script>
