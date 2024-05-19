@@ -16,16 +16,20 @@
         </div>
     </div>
   </template>
-  <template #rightCol></template>
+  <template #rightCol>
+    <Register></Register>
+  </template>
   </TheTwoColumnsLayout>
 </template>
 
 <script>
-import TheTwoColumnsLayout from "../layouts/TheTwoColumnsLayout.vue";
+import TheTwoColumnsLayout from "../layouts/TheTwoColumnsLayout";
+import Register from "../components/auth/Register";
 export default {
   name: "HomePage",
   components: {
     TheTwoColumnsLayout,
+    Register,
   },
 };
 </script>
