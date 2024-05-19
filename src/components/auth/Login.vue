@@ -12,6 +12,9 @@
         >
       </p>
     </div>
+    <div class="alert alert-danger col-md-8" v-if="error">
+      {{ errorDisplayText }}
+    </div>
     <Form @submit="submitData" :validation-schema="schema" v-slot="{ errors }">
       <div class="form-row">
         <div class="form-group col-md-8 offset-2">
@@ -46,7 +49,10 @@
       <div class="form-row mt-3">
         <div class="form-group col-md-8 offset-2">
           <div class="d-grid">
-            <button class="btn bg-vue">Einloggen</button>
+            <button class="btn bg-vue">
+              <span v-if="!isLoading">Einloggen</span>
+              <span v-else class="spinner-border spinner-border-sm"></span>
+            </button>
           </div>
         </div>
       </div>
@@ -57,6 +63,7 @@
 <script>
 import { Form, Field } from "vee-validate";
 import * as yup from "yup";
+import axios from "axios";
 
 export default {
   name: "Login",
@@ -91,11 +98,47 @@ export default {
     });
     return {
       schema,
+      error: "",
+      isLoading: false,
     };
+  },
+  computed: {
+    errorDisplayText() {
+      if (this.error) {
+        if (this.error.includes("INVALID_PASSWORD")) {
+          return "Falsches Passwort";
+        }
+        return "Es ist ein unbekannter Fehler aufgetreten.";
+      }
+      return "";
+    },
   },
   methods: {
     submitData(values) {
-      console.log(values);
+        this.isLoading = true;
+        this.error = "";
+      // console.log(values);
+      const signinDO = {
+        email: values.email,
+        password: values.password,
+        returnSecureToken: true,
+      };
+      const apiKey = process.env.VUE_APP_API_KEY_FIREBASE;
+      console.log(apiKey);
+      axios
+        .post(
+          `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key==${apiKey}`,
+          signinDO
+        )
+        .then((response) => {
+          console.log(response);
+          this.isLoading = false;
+        })
+        .catch((error) => {
+          //console.log({ error });
+          this.error = error.response.data.error.message;
+          this.isLoading = false;
+        });
     },
     changeComponent(componentName) {
       this.$emit("change-component", { componentName });
