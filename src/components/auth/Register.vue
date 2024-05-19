@@ -65,8 +65,8 @@
         <div class="form-group col-md-8 offset-2">
           <div class="d-grid">
             <button class="btn bg-vue" type="submit">
-                <span v-if="!isLoading">Registrieren</span>
-                <span v-else class="spinner-border spinner-border-sm"></span>
+              <span v-if="!isLoading">Registrieren</span>
+              <span v-else class="spinner-border spinner-border-sm"></span>
             </button>
           </div>
         </div>
@@ -78,7 +78,6 @@
 <script>
 import { Form, Field } from "vee-validate";
 import * as yup from "yup";
-import axios from "axios";
 
 export default {
   name: "Register",
@@ -130,30 +129,22 @@ export default {
   },
   methods: {
     submitData(values) {
-        this.isLoading = true;
-        this.error = "";
+      this.isLoading = true;
+      this.error = "";
       // console.log(values);
-      const signupDO = {
-        email: values.email,
-        password: values.password,
-        returnSecureToken: true,
-      };
-      const apiKey = process.env.VUE_APP_API_KEY_FIREBASE;
-      console.log(apiKey);
-      axios
-        .post(
-          `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}`,
-          signupDO
-        )
-        .then((response) => {
-          console.log(response);
-          this.isLoading = false;
-          this.changeComponent("login");
+      this.$store
+        .dispatch("signup", {
+          email: values.email,
+          password: values.password,
+        })
+        .then(() => {
+            this.isLoading = false;
+            console.log(this.$store.state);
+            this.changeComponent("login");
         })
         .catch((error) => {
-          //console.log({ error });
-          this.error = error.response.data.error.message;
-          this.isLoading = false;
+            this.error = error.message;
+            this.isLoading = false;
         });
     },
     changeComponent(componentName) {

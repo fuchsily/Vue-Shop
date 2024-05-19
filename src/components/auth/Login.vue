@@ -124,7 +124,6 @@ export default {
         returnSecureToken: true,
       };
       const apiKey = process.env.VUE_APP_API_KEY_FIREBASE;
-      console.log(apiKey);
       axios
         .post(
           `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key==${apiKey}`,
