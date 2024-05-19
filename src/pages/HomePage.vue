@@ -44,6 +44,7 @@ export default {
   methods: {
     changeComponent(payload) {
       this.componentName = payload.componentName;
+      console.log(payload.componentName);
     },
   },
 };
